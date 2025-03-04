@@ -16,7 +16,7 @@ API_HASH = environ.get('API_HASH', 'dda7630be99593256cb7c520eae0ce6d')
 BOT_TOKEN = environ.get('BOT_TOKEN', "")
 
 
-# This Pictures Is For Start Message Picture, You Can Add Multiple By Giving One Space Between Each.
+# This Pictres Is For Start Message Picture, You Can Add Multiple By Giving One Space Between Each.
 PICS = (environ.get('PICS', 'https://i.ibb.co/jZJZvfdz/file-238.jpg')).split()
 
 
