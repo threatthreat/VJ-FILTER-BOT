@@ -14,19 +14,14 @@ from database.connections_mdb import active_connection
 logger = logging.getLogger(__name__)
 cache_time = 0 if AUTH_USERS or AUTH_CHANNEL else CACHE_TIME
 
-ALLOWED_GROUPS = [-1002255660292]  # Add your allowed group IDs here
-
 async def inline_users(query: InlineQuery):
-    """Restrict inline queries to specific groups only"""
-    if query.chat_type != "supergroup" and query.chat_type != "group":
-        return False  # Block inline queries outside of groups
-
-    if AUTH_USERS and query.from_user and query.from_user.id in AUTH_USERS:
-        return True
-    
+    if AUTH_USERS:
+        if query.from_user and query.from_user.id in AUTH_USERS:
+            return True
+        else:
+            return False
     if query.from_user and query.from_user.id not in temp.BANNED_USERS:
-        return query.chat.id in ALLOWED_GROUPS  # Check if the group is allowed
-    
+        return True
     return False
 
 @Client.on_inline_query()
@@ -38,8 +33,8 @@ async def answer(bot, query):
         await query.answer(
             results=[],
             cache_time=0,
-            switch_pm_text='This bot only works in groups! Join allowed groups.',
-            switch_pm_parameter="join_group"
+            switch_pm_text='okDa',
+            switch_pm_parameter="hehe"
         )
         return
 
@@ -66,24 +61,17 @@ async def answer(bot, query):
     files, next_offset, total = await get_search_results(chat_id, string, file_type=file_type, max_results=10, offset=offset)
 
     for file in files:
-        title = file['file_name']
-        size = get_size(file['file_size'])
-        f_caption = file['caption']
-        
+        title=file['file_name']
+        size=get_size(file['file_size'])
+        f_caption=file['caption']
         if CUSTOM_FILE_CAPTION:
             try:
-                f_caption = CUSTOM_FILE_CAPTION.format(
-                    file_name=title or '', 
-                    file_size=size or '', 
-                    file_caption=f_caption or ''
-                )
+                f_caption=CUSTOM_FILE_CAPTION.format(file_name= '' if title is None else title, file_size='' if size is None else size, file_caption='' if f_caption is None else f_caption)
             except Exception as e:
                 logger.exception(e)
-                f_caption = f_caption
-        
+                f_caption=f_caption
         if f_caption is None:
             f_caption = f"{file['file_name']}"
-
         results.append(
             InlineQueryResultCachedDocument(
                 title=file['file_name'],
@@ -101,7 +89,7 @@ async def answer(bot, query):
         try:
             await query.answer(
                 results=results,
-                is_personal=True,
+                is_personal = True,
                 cache_time=cache_time,
                 switch_pm_text=switch_pm_text,
                 switch_pm_parameter="start",
@@ -118,7 +106,7 @@ async def answer(bot, query):
 
         await query.answer(
             results=[],
-            is_personal=True,
+            is_personal = True,
             cache_time=cache_time,
             switch_pm_text=switch_pm_text,
             switch_pm_parameter="okay"
