@@ -13,7 +13,8 @@ logging.getLogger().setLevel(logging.INFO)
 logging.getLogger("pyrogram").setLevel(logging.ERROR)
 logging.getLogger("cinemagoer").setLevel(logging.ERROR)
 
-from pyrogram import Client, idle
+from pyrogram import Client, idle, filters
+from pyrogram.types import Message
 from database.users_chats_db import db
 from info import *
 from utils import temp
@@ -33,6 +34,10 @@ files = glob.glob(ppath)
 TechVJBot.start()
 loop = asyncio.get_event_loop()
 
+# 🔹 Restrict Bot to Groups Only
+@TechVJBot.on_message(filters.private)
+async def block_private_messages(client, message: Message):
+    await message.reply_text("❌ This bot only works in groups. Join our group = @moviesandseries36 !")
 
 async def start():
     print('\n')
@@ -96,4 +101,3 @@ if __name__ == '__main__':
         loop.run_until_complete(start())
     except KeyboardInterrupt:
         logging.info('Service Stopped Bye 👋')
-
