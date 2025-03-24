@@ -103,8 +103,7 @@ async def answer(bot, query):
         switch_pm_text = f'{emoji.CROSS_MARK} No results'
         if string:
             switch_pm_text += f' for "{string}"'
-        switch_pm_text += " ❌ This bot only works in groups join @moviesandseries36 !"
-        
+
         await query.answer(
             results=[],
             is_personal = True,
@@ -112,6 +111,7 @@ async def answer(bot, query):
             switch_pm_text=switch_pm_text,
             switch_pm_parameter="okay"
         )
+
 
 def get_reply_markup(query):
     buttons = [[
